@@ -40,11 +40,16 @@ app.post('/doInsert',async (req,res)=>{
     let inputName = req.body.txtName;
     let inputWeight = req.body.txtWeight;
     let newStudent = {name : inputName, weigh:inputWeight};
-
-    let client= await MongoClient.connect(url);
-    let dbo = client.db("StudentDB");
-    await dbo.collection("Student").insertOne(newStudent);
-    res.redirect('/student');
+    if(inputName.trym().length == 0){
+        let modelError = {nameError:"ten khong de trang!",emailError:"Email k hop le"};
+        res.render('insert',{model:modelError});
+    }else{
+        let client= await MongoClient.connect(url);
+        let dbo = client.db("StudentDB");
+        await dbo.collection("Student").insertOne(newStudent);
+        res.redirect('/student');
+    }
+    
 
 })
 app.get('/delete',async (req,res)=>{
